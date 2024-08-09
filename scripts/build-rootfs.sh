@@ -74,14 +74,14 @@ lb config \
     --bootstrap-qemu-static /usr/bin/qemu-aarch64-static \
     --archive-areas "main restricted universe multiverse" \
     --parent-archive-areas "main restricted universe multiverse" \
-    --mirror-bootstrap "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
-    --parent-mirror-bootstrap "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
-    --mirror-chroot-security "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
-    --parent-mirror-chroot-security "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
-    --mirror-binary-security "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
-    --parent-mirror-binary-security "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
-    --mirror-binary "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
-    --parent-mirror-binary "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
+    --mirror-bootstrap "http://ports.ubuntu.com" \
+    --parent-mirror-bootstrap "http://ports.ubuntu.com" \
+    --mirror-chroot-security "http://ports.ubuntu.com" \
+    --parent-mirror-chroot-security "http://ports.ubuntu.com" \
+    --mirror-binary-security "http://ports.ubuntu.com" \
+    --parent-mirror-binary-security "http://ports.ubuntu.com" \
+    --mirror-binary "http://ports.ubuntu.com" \
+    --parent-mirror-binary "http://ports.ubuntu.com" \
     --keyring-packages ubuntu-keyring \
     --linux-flavours "${KERNEL_FLAVOR}"
 

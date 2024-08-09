@@ -159,11 +159,39 @@ fi
 
 # Update the initramfs
 chroot ${chroot_dir} update-initramfs -u
+#RM
+chroot "${chroot_dir}" apt-get -y remove --purge libreoffice*
+chroot "${chroot_dir}" apt-get -y remove --purge gnome-games gnome-sudoku gnome-mahjongg gnome-mines aisleriot 
+chroot "${chroot_dir}" apt-get -y remove --purge thunderbird*
+
+#Tuna mirrors
+cat << EOF | chroot ${chroot_dir} tee /etc/apt/sources.list > /dev/null
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE} main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE}-updates main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE}-backports main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE}-security main restricted universe multiverse
+EOF
 
 # Remove packages
 chroot ${chroot_dir} apt-get -y clean
 chroot ${chroot_dir} apt-get -y autoclean
 chroot ${chroot_dir} apt-get -y autoremove
+
+# 创建用户 radxa
+chroot ${chroot_dir} adduser radxa --gecos "" --disabled-password
+echo "radxa:radxa" | chroot ${chroot_dir} chpasswd
+chroot ${chroot_dir} usermod -aG sudo,audio,video,plugdev,render,gpio,i2c,spidev,pwm,dialout radxa
+
+# 配置默认语言为 en_US.UTF-8
+chroot ${chroot_dir} locale-gen en_US.UTF-8
+chroot ${chroot_dir} update-locale LANG=en_US.UTF-8
+
+# 为 radxa 用户设置语言环境
+chroot ${chroot_dir} su - radxa -c 'echo "export LANG=en_US.UTF-8" >> ~/.bashrc'
+chroot ${chroot_dir} su - radxa -c 'echo "export LANGUAGE=en_US:en" >> ~/.bashrc'
+
+# 设置时区为 UTC+8 (Asia/Shanghai)
+chroot ${chroot_dir} timedatectl set-timezone Asia/Shanghai
 
 # Umount the root filesystem
 teardown_mountpoint $chroot_dir

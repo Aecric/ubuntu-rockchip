@@ -18,12 +18,7 @@ function config_image_hook__rock-5a() {
     if [ "${suite}" == "jammy" ] || [ "${suite}" == "noble" ]; then
 
         # Replace sources list with Tsinghua University's mirror
-        chroot "${rootfs}" cat > ${rootfs}/etc/apt/sources.list << EOF
-        deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${suite} main restricted universe multiverse
-        deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${suite}-updates main restricted universe multiverse
-        deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${suite}-backports main restricted universe multiverse
-        deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${suite}-security main restricted universe multiverse
-EOF
+   
         # Install panfork
         chroot "${rootfs}" add-apt-repository -y ppa:jjriek/panfork-mesa
         chroot "${rootfs}" add-apt-repository ppa:mozillateam/ppa
@@ -42,19 +37,14 @@ EOF
         # chroot "${rootfs}" systemctl enable radxa-a8-bluetooth
 
 
-        #RM
-        chroot "${rootfs}" apt-get -y remove --purge libreoffice*
-        chroot "${rootfs}" apt-get -y remove --purge gnome-games gnome-sudoku gnome-mahjongg gnome-mines aisleriot 
-        chroot "${rootfs}" apt-get -y remove --purge thunderbird*
-        chroot "${rootfs}" apt-get autoremove -y
-        chroot "${rootfs}" apt-get clean
-
-
         # Fix and configure audio device
         mkdir -p "${rootfs}/usr/lib/scripts"
         cp "${overlay}/usr/lib/scripts/alsa-audio-config" "${rootfs}/usr/lib/scripts/alsa-audio-config"
         cp "${overlay}/usr/lib/systemd/system/alsa-audio-config.service" "${rootfs}/usr/lib/systemd/system/alsa-audio-config.service"
         chroot "${rootfs}" systemctl enable alsa-audio-config
+
+
+
     fi
 
     return 0
