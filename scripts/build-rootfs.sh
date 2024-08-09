@@ -37,7 +37,7 @@ tmp_dir=$(mktemp -d)
 cd "${tmp_dir}" || exit 1
 
 # Clone the livecd rootfs fork
-git clone https://github.com/Joshua-Riek/livecd-rootfs
+git clone https://github.com/Anaple/livecd-rootfs
 cd livecd-rootfs || exit 1
 
 # Install build deps
@@ -74,14 +74,14 @@ lb config \
     --bootstrap-qemu-static /usr/bin/qemu-aarch64-static \
     --archive-areas "main restricted universe multiverse" \
     --parent-archive-areas "main restricted universe multiverse" \
-    --mirror-bootstrap "http://ports.ubuntu.com" \
-    --parent-mirror-bootstrap "http://ports.ubuntu.com" \
-    --mirror-chroot-security "http://ports.ubuntu.com" \
-    --parent-mirror-chroot-security "http://ports.ubuntu.com" \
-    --mirror-binary-security "http://ports.ubuntu.com" \
-    --parent-mirror-binary-security "http://ports.ubuntu.com" \
-    --mirror-binary "http://ports.ubuntu.com" \
-    --parent-mirror-binary "http://ports.ubuntu.com" \
+    --mirror-bootstrap "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
+    --parent-mirror-bootstrap "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
+    --mirror-chroot-security "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
+    --parent-mirror-chroot-security "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
+    --mirror-binary-security "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
+    --parent-mirror-binary-security "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
+    --mirror-binary "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
+    --parent-mirror-binary "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/" \
     --keyring-packages ubuntu-keyring \
     --linux-flavours "${KERNEL_FLAVOR}"
 
