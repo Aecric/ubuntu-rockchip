@@ -122,12 +122,10 @@ echo "software-properties-common" > config/package-lists/my.list.chroot
 
 if [ "${PROJECT}" == "ubuntu" ]; then
     # Specific packages to install for ubuntu desktop
-    (
+    (   
         echo "ubuntu-desktop-rockchip"
-        echo "oem-config-gtk"
-        echo "ubiquity-frontend-gtk"
-        echo "ubiquity-slideshow-ubuntu"
         echo "localechooser-data"
+        
     ) >> config/package-lists/my.list.chroot
 else
     # Specific packages to install for ubuntu server
