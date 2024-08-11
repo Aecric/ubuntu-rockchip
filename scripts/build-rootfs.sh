@@ -122,7 +122,7 @@ echo "software-properties-common" > config/package-lists/my.list.chroot
 
 if [ "${PROJECT}" == "ubuntu" ]; then
     # Specific packages to install for ubuntu desktop
-    (   
+    (
         echo "ubuntu-desktop-rockchip"
         echo "localechooser-data"
         

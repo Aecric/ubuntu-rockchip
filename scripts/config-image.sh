@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eE 
+set -eE
 trap 'echo Error: in $0 on line $LINENO' ERR
 
 if [ "$(id -u)" -ne 0 ]; then 
@@ -134,11 +134,11 @@ setup_mountpoint $chroot_dir
 # Update packages
 chroot $chroot_dir apt-get update
 chroot $chroot_dir apt-get -y upgrade
-    
+
 # Run config hook to handle board specific changes
 if [[ $(type -t config_image_hook__"${BOARD}") == function ]]; then
     config_image_hook__"${BOARD}" "${chroot_dir}" "${overlay_dir}" "${SUITE}"
-fi 
+fi
 
 # Download and install U-Boot
 if [[ ${LAUNCHPAD} == "Y" ]]; then
@@ -159,59 +159,9 @@ fi
 
 # Update the initramfs
 chroot ${chroot_dir} update-initramfs -u
-#RM
-chroot "${chroot_dir}" apt-get -y remove --purge libreoffice*
-chroot "${chroot_dir}" apt-get -y remove --purge gnome-games gnome-sudoku gnome-mahjongg gnome-mines aisleriot chromium-browser
-chroot "${chroot_dir}" apt-get -y remove --purge thunderbird*
-#Firefox
-chroot "${chroot_dir}" add-apt-repository -y ppa:mozillateam/ppa
-chroot "${chroot_dir}" apt-get -y install firefox-esr
 
 
-#Radxa Repo
-chroot ${chroot_dir} bash -c '
-VENDOR="$(tr $"\0" $"\n" < /proc/device-tree/compatible | tail -n 1 | cut -d "," -f 1)"
-source /etc/os-release
-echo "deb [signed-by=/usr/share/keyrings/radxa-archive-keyring.gpg] https://radxa-repo.github.io/$VERSION_CODENAME $VENDOR-$VERSION_CODENAME main" | tee "/etc/apt/sources.list.d/radxa-$VENDOR.list"
-apt-get update
-'
-
-chroot "${chroot_dir}" apt-get -y install rsetup radxa-udev radxa-bootutils
-
-chroot ${chroot_dir} bash -c '
-apt-get update && apt-get install -y curl gnupg2 lsb-release
-curl -sSL "https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc" | apt-key add -
-sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-apt-get update
-'
-
-
-
-#Tuna mirrors
-cat << EOF | chroot ${chroot_dir} tee /etc/apt/sources.list > /dev/null
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE} main restricted universe multiverse
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE}-updates main restricted universe multiverse
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE}-backports main restricted universe multiverse
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE}-security main restricted universe multiverse
-EOF
-
-# Remove packages
-chroot ${chroot_dir} apt-get -y clean
-chroot ${chroot_dir} apt-get -y autoclean
-chroot ${chroot_dir} apt-get -y autoremove
-
-# 创建用户 radxa
-chroot ${chroot_dir} adduser radxa --gecos "" --disabled-password
-echo "radxa:radxa" | chroot ${chroot_dir} chpasswd
-chroot ${chroot_dir} usermod -aG sudo,audio,video,plugdev,render,dialout radxa
-
-# 配置默认语言为 en_US.UTF-8
-chroot ${chroot_dir} locale-gen en_US.UTF-8
-chroot ${chroot_dir} update-locale LANG=en_US.UTF-8
-
-# 为 radxa 用户设置语言环境
-chroot ${chroot_dir} su - radxa -c 'echo "export LANG=en_US.UTF-8" >> ~/.bashrc'
-chroot ${chroot_dir} su - radxa -c 'echo "export LANGUAGE=en_US:en" >> ~/.bashrc'
+./scripts/config-local.sh
 
 # Umount the root filesystem
 teardown_mountpoint $chroot_dir
