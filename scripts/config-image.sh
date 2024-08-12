@@ -203,24 +203,23 @@ chroot ${chroot_dir} su - radxa -c 'echo -e "bind-addr: 0.0.0.0:8080\nauth: pass
 
 #chroot ${chroot_dir} su - radxa -c 'echo "radxa" | sudo -S systemctl enable --now code-server@$USER'
 # 预装ROS2
-chroot ${chroot_dir} bash -c "
-. /etc/os-release
-if [ \"\$VERSION_CODENAME\" = \"jammy\" ]; then
+
+if [ "${SUITE}" = "jammy" ]; then
     # 安装 ROS Humble (for Ubuntu 22.04)
-    sudo apt-get update && sudo apt-get install -y curl gnupg lsb-release
-    sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo tee /etc/apt/trusted.gpg.d/ros.asc > /dev/null
-    sudo sh -c 'echo \"deb http://packages.ros.org/ros2/ubuntu \${VERSION_CODENAME} main\" > /etc/apt/sources.list.d/ros2-latest.list'
-    sudo apt-get update
-    sudo apt-get install -y ros-humble-desktop
-elif [ \"\$VERSION_CODENAME\" = \"noble\" ]; then
+    chroot ${chroot_dir} apt-get update && chroot ${chroot_dir} apt-get install -y curl gnupg lsb-release
+    chroot ${chroot_dir} curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | chroot ${chroot_dir} tee /etc/apt/trusted.gpg.d/ros.asc > /dev/null
+    chroot ${chroot_dir} sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu ${SUITE} main" > /etc/apt/sources.list.d/ros2-latest.list'
+    chroot ${chroot_dir} apt-get update
+    chroot ${chroot_dir} apt-get install -y ros-humble-desktop
+elif [ "${SUITE}" = "noble" ]; then
     # 安装 ROS Jazzy (for Ubuntu 24.04)
-    sudo apt-get update && sudo apt-get install -y curl gnupg lsb-release
-    sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo tee /etc/apt/trusted.gpg.d/ros.asc > /dev/null
-    sudo sh -c 'echo \"deb http://packages.ros.org/ros2/ubuntu \${VERSION_CODENAME} main\" > /etc/apt/sources.list.d/ros2-latest.list'
-    sudo apt-get update
-    sudo apt-get install -y ros-jazzy-desktop
+    chroot ${chroot_dir} apt-get update && chroot ${chroot_dir} apt-get install -y curl gnupg lsb-release
+    chroot ${chroot_dir} curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | chroot ${chroot_dir} tee /etc/apt/trusted.gpg.d/ros.asc > /dev/null
+    chroot ${chroot_dir} sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu ${SUITE} main" > /etc/apt/sources.list.d/ros2-latest.list'
+    chroot ${chroot_dir} apt-get update
+    chroot ${chroot_dir} apt-get install -y ros-jazzy-desktop
 fi
-"
+
 # 为用户 radxa 设置 ROS 环境
 chroot ${chroot_dir} su - radxa -c 'echo "source /opt/ros/\$(ls /opt/ros)*/setup.bash" >> ~/.bashrc'
 

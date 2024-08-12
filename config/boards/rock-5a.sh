@@ -21,7 +21,6 @@ function config_image_hook__rock-5a() {
    
         # Install panfork
         chroot "${rootfs}" add-apt-repository -y ppa:jjriek/panfork-mesa
-        chroot "${rootfs}" add-apt-repository ppa:mozillateam/ppa
         chroot "${rootfs}" apt-get update
         chroot "${rootfs}" apt-get -y install mali-g610-firmware
         chroot "${rootfs}" apt-get -y dist-upgrade
