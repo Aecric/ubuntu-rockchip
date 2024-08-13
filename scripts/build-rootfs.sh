@@ -125,6 +125,9 @@ if [ "${PROJECT}" == "ubuntu" ]; then
     (
         echo "ubuntu-desktop-rockchip"
         echo "localechooser-data"
+        echo "oem-config-gtk"
+        echo "ubiquity-frontend-gtk"
+        echo "ubiquity-slideshow-ubuntu"
         
     ) >> config/package-lists/my.list.chroot
 else

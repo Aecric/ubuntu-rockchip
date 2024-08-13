@@ -162,12 +162,11 @@ chroot ${chroot_dir} update-initramfs -u
 #local setting
 #RM
 chroot "${chroot_dir}" apt-get -y remove --purge libreoffice*
-chroot "${chroot_dir}" apt-get -y remove --purge gnome-games gnome-sudoku gnome-mahjongg gnome-mines aisleriot chromium-browser
+chroot "${chroot_dir}" apt-get -y remove --purge gnome-games gnome-sudoku gnome-mahjongg gnome-mines aisleriot
 chroot "${chroot_dir}" apt-get -y remove --purge thunderbird*
 #Firefox
 chroot "${chroot_dir}" add-apt-repository -y ppa:mozillateam/ppa
 chroot "${chroot_dir}" apt-get -y install firefox-esr
-
 # 创建用户 radxa
 chroot ${chroot_dir} adduser radxa --gecos "" --disabled-password
 echo "radxa:radxa" | chroot ${chroot_dir} chpasswd
