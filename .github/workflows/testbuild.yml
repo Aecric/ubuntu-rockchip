@@ -15,6 +15,7 @@ jobs:
             - desktop
           suite:
             - jammy
+            - noble
     steps:
       - name: Get more disk space
         uses: jlumbroso/free-disk-space@main
@@ -62,6 +63,7 @@ jobs:
         matrix:
           suite:
             - jammy
+            - noble
     steps:
       - name: Get more disk space
         uses: jlumbroso/free-disk-space@main
@@ -111,10 +113,12 @@ jobs:
       matrix:
         board:
           - rock-5a
+          - lubancat-1
         flavor:
           - desktop
         suite:
           - jammy
+          - noble
         exclude:
           - board: armsom-sige5
             suite: jammy
