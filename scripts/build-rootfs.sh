@@ -135,6 +135,29 @@ else
     echo "ubuntu-server-rockchip" >> config/package-lists/my.list.chroot
 fi
 
+# ROS2 Installation
+if [ "${SUITE}" = "jammy" ]; then
+    # Install ROS Humble (for Ubuntu 22.04)
+    echo "Installing ROS Humble..."
+    echo "curl gnupg lsb-release" >> config/package-lists/my.list.chroot
+    if [ "${PROJECT}" == "ubuntu" ]; then
+        echo "ros-humble-desktop" >> config/package-lists/my.list.chroot
+    else
+        echo "ros-humble-ros-base" >> config/package-lists/my.list.chroot
+    fi
+    echo "deb http://packages.ros.org/ros2/ubuntu ${SUITE} main" > config/archives/ros2.list.chroot
+elif [ "${SUITE}" = "noble" ]; then
+    # Install ROS Jazzy (for Ubuntu 24.04)
+    echo "Installing ROS Jazzy..."
+    echo "curl gnupg lsb-release" >> config/package-lists/my.list.chroot
+    if [ "${PROJECT}" == "ubuntu" ]; then
+        echo "ros-jazzy-desktop" >> config/package-lists/my.list.chroot
+    else
+        echo "ros-jazzy-ros-base" >> config/package-lists/my.list.chroot
+    fi
+    echo "deb http://packages.ros.org/ros2/ubuntu ${SUITE} main" > config/archives/ros2.list.chroot
+fi
+
 # Build the rootfs
 lb build
 
