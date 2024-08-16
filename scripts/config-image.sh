@@ -159,8 +159,6 @@ fi
 # Update the initramfs
 chroot ${chroot_dir} update-initramfs -u
 
-
-
 # 创建用户 radxa
 chroot ${chroot_dir} adduser radxa --gecos "" --disabled-password
 echo "radxa:radxa" | chroot ${chroot_dir} chpasswd
@@ -182,8 +180,6 @@ chroot ${chroot_dir} su - radxa -c 'sed -i "/live/d" ~/.bashrc'
 chroot ${chroot_dir} su - radxa -c 'sed -i "/live/d" ~/.profile'
 chroot ${chroot_dir} rm -f /etc/live*
 chroot ${chroot_dir} systemctl restart systemd-hostnamed
-
-
 # 预装code-server
 chroot ${chroot_dir} bash -c "curl -fsSL https://code-server.dev/install.sh | sh"
 
@@ -194,48 +190,6 @@ sleep 6
 # 清空并写入新的配置到 /home/radxa/.config/code-server/config.yaml
 chroot ${chroot_dir} su - radxa -c 'echo -e "bind-addr: 0.0.0.0:8080\nauth: password\npassword: qwer123\ncert: false" > /home/radxa/.config/code-server/config.yaml'
 
-
-#local setting
-if [ "${PROJECT}" == "ubuntu" ]; then
-    #RM
-    chroot "${chroot_dir}" apt-get -y remove --purge libreoffice*
-    chroot "${chroot_dir}" apt-get -y remove --purge thunderbird*
-    #Firefox
-    chroot "${chroot_dir}" add-apt-repository -y ppa:mozillateam/ppa
-    chroot "${chroot_dir}" apt-get -y install firefox-esr
-    # 预装ROS2
-    if [ "${SUITE}" = "jammy" ]; then
-        # 安装 ROS Humble (for Ubuntu 22.04)
-        chroot ${chroot_dir} apt-get update && chroot ${chroot_dir} apt-get install -y curl gnupg lsb-release
-        chroot ${chroot_dir} curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | chroot ${chroot_dir} tee /etc/apt/trusted.gpg.d/ros.asc > /dev/null
-        chroot ${chroot_dir} sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu ${SUITE} main" > /etc/apt/sources.list.d/ros2-latest.list'
-        chroot ${chroot_dir} apt-get update
-        chroot ${chroot_dir} apt-get install -y ros-humble-desktop
-    elif [ "${SUITE}" = "noble" ]; then
-        # 安装 ROS Jazzy (for Ubuntu 24.04)
-        chroot ${chroot_dir} apt-get update && chroot ${chroot_dir} apt-get install -y curl gnupg lsb-release
-        chroot ${chroot_dir} curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | chroot ${chroot_dir} tee /etc/apt/trusted.gpg.d/ros.asc > /dev/null
-        chroot ${chroot_dir} sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu ${SUITE} main" > /etc/apt/sources.list.d/ros2-latest.list'
-        chroot ${chroot_dir} apt-get update
-        chroot ${chroot_dir} apt-get install -y ros-jazzy-desktop
-else
-    # Specific packages to install for ubuntu server
-        # 预装ROS2
-    if [ "${SUITE}" = "jammy" ]; then
-        # 安装 ROS Humble (for Ubuntu 22.04)
-        chroot ${chroot_dir} apt-get update && chroot ${chroot_dir} apt-get install -y curl gnupg lsb-release
-        chroot ${chroot_dir} curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | chroot ${chroot_dir} tee /etc/apt/trusted.gpg.d/ros.asc > /dev/null
-        chroot ${chroot_dir} sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu ${SUITE} main" > /etc/apt/sources.list.d/ros2-latest.list'
-        chroot ${chroot_dir} apt-get update
-        chroot ${chroot_dir} apt-get install -y ros-humble-ros-base
-    elif [ "${SUITE}" = "noble" ]; then
-        # 安装 ROS Jazzy (for Ubuntu 24.04)
-        chroot ${chroot_dir} apt-get update && chroot ${chroot_dir} apt-get install -y curl gnupg lsb-release
-        chroot ${chroot_dir} curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | chroot ${chroot_dir} tee /etc/apt/trusted.gpg.d/ros.asc > /dev/null
-        chroot ${chroot_dir} sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu ${SUITE} main" > /etc/apt/sources.list.d/ros2-latest.list'
-        chroot ${chroot_dir} apt-get update
-        chroot ${chroot_dir} apt-get install -y ros-humble-ros-base
-fi
 # 为用户 radxa 设置 ROS 环境
 chroot ${chroot_dir} su - radxa -c 'echo "source /opt/ros/\$(ls /opt/ros)*/setup.bash" >> ~/.bashrc'
 
