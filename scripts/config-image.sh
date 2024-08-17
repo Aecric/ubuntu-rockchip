@@ -120,13 +120,18 @@ export DEBIAN_FRONTEND=noninteractive
 export LC_ALL=C
 
 # Debootstrap options
-chroot_dir=rootfs
+chroot_dir_fs=rootfs
 overlay_dir=../overlay
 
 # Extract the compressed root filesystem
-rm -rf ${chroot_dir} && mkdir -p ${chroot_dir}
-tar -xpJf "ubuntu-${RELASE_VERSION}-preinstalled-${FLAVOR}-arm64.rootfs.tar.xz" -C ${chroot_dir}
-
+rm -rf ${chroot_dir_fs} && mkdir -p ${chroot_dir_fs}
+tar -xpJf "ubuntu-${RELASE_VERSION}-preinstalled-${FLAVOR}-arm64.rootfs.tar.xz" -C ${chroot_dir_fs}
+RELEASE=${SUITE}
+ARCH="arm64"
+TARGET_DIR="/ubuntu-$RELEASE-$ARCH"
+mv ${chroot_dir_fs}$TARGET_DIR/* ${chroot_dir_fs}
+rm -rf ${chroot_dir_fs}$TARGET_DIR/
+chroot_dir="$chroot_dir_fs"
 # Mount the root filesystem
 setup_mountpoint $chroot_dir
 
@@ -180,8 +185,6 @@ chroot ${chroot_dir} su - radxa -c 'sed -i "/live/d" ~/.bashrc'
 chroot ${chroot_dir} su - radxa -c 'sed -i "/live/d" ~/.profile'
 chroot ${chroot_dir} rm -f /etc/live*
 chroot ${chroot_dir} systemctl restart systemd-hostnamed
-# 预装code-server
-chroot ${chroot_dir} bash -c "curl -fsSL https://code-server.dev/install.sh | sh"
 
 # 以 radxa 用户运行一次 code-server 并在 5 秒后结束
 chroot ${chroot_dir} su - radxa -c 'timeout 5s code-server &'

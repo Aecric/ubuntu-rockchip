@@ -150,7 +150,7 @@ EOF
     apt-get update
 
     # 安装基本的包
-    apt-get install -y sudo wget net-tools curl 
+    apt-get install -y sudo wget net-tools curl
 
     # 安装最小的GNOME桌面环境
     apt-get install -y gnome-core gdm3 xwayland gnome-terminal nautilus gnome-system-monitor
@@ -278,7 +278,7 @@ echo "Ubuntu $RELASE_VERSION ARM64 最小镜像已成功构建于 $TARGET_DIR"
 # 进入根文件系统目录并打包为 .tar.xz 文件
 (tar -p -c --sort=name --xattrs ./$TARGET_DIR*) | xz -3 -T0 > "ubuntu-${RELASE_VERSION}-preinstalled-${FLAVOR}-arm64.rootfs.tar.xz"
 
-# mv "ubuntu-${RELASE_VERSION}-preinstalled-${FLAVOR}-arm64.rootfs.tar.xz" 
+# mv "ubuntu-${RELASE_VERSION}-preinstalled-${FLAVOR}-arm64.rootfs.tar.xz"
 echo "压缩完成：文件已保存为 ../ubuntu-${RELASE_VERSION}-preinstalled-${FLAVOR}-arm64.rootfs.tar.xz"
 
 rm -rf $TARGET_DIR
