@@ -1,9 +1,9 @@
 #!/bin/bash
 
-set -eE 
+set -eE
 trap 'echo Error: in $0 on line $LINENO' ERR
 
-if [ "$(id -u)" -ne 0 ]; then 
+if [ "$(id -u)" -ne 0 ]; then
     echo "Please run as root"
     exit 1
 fi
@@ -44,7 +44,7 @@ setup_mountpoint() {
     mount devpts-live -t devpts -o nodev,nosuid "$mountpoint/dev/pts"
     mount proc-live -t proc "$mountpoint/proc"
     mount sysfs-live -t sysfs "$mountpoint/sys"
-    ##mount securityfs -t securityfs "$mountpoint/sys/kernel/security"
+    mount securityfs -t securityfs "$mountpoint/sys/kernel/security"
     mount -t cgroup2 none "$mountpoint/sys/fs/cgroup"
     mount -t tmpfs none "$mountpoint/tmp"
     mount -t tmpfs none "$mountpoint/var/lib/apt/lists"
@@ -85,9 +85,9 @@ if ! command -v debootstrap &> /dev/null; then
 fi
 if [ ! -d "$TARGET_DIR" ]; then
     # 创建目标目录
-    mkdir -p "$TARGET_DIR"
     # 使用 debootstrap 构建最小系统
     debootstrap --arch="$ARCH" --variant=minbase "$RELEASE" "$TEMP_DIR" "$MIRROR_URL"
+    mkdir -p "$TARGET_DIR"
     sudo mv "$TEMP_DIR"/* "$TARGET_DIR/"
     setup_mountpoint "$TARGET_DIR"
 fi
@@ -238,7 +238,7 @@ EOF
     apt-get update
 
     # 安装基本的包
-    apt-get install -y sudo wget net-tools curl 
+    apt-get install -y sudo wget net-tools curl
 
     # 安装最小的GNOME桌面环境
     apt-get install -y gnome-core gdm3 xwayland gnome-terminal nautilus gnome-system-monitor
