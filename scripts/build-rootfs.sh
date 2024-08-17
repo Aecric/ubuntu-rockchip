@@ -118,7 +118,7 @@ EOF
     apt-get update
 
     # 安装 dpkg 和相关的基础包
-    apt-get install -y dpkg apt libapt-pkg6.0 gpgv apt-utils debian-archive-keyring libc6 software-properties-common locales gnupg lsb-release
+    apt-get install -y dpkg apt libapt-pkg6.0 gpgv apt-utils debian-archive-keyring libc6 software-properties-common locales gnupg lsb-release  mtd-utils
 
     # 添加 Rockchip 的 PPA 源
     add-apt-repository -y ppa:jjriek/rockchip
@@ -150,9 +150,11 @@ EOF
     apt-get update
 
     # 安装基本的包
-    apt-get install -y sudo wget net-tools curl
+    apt-get install -y sudo ubuntu-rockchip-settings ubuntu-rockchip-settings-desktop wget net-tools curl u-boot-menu cloud-initramfs-growroot
 
     # 安装最小的GNOME桌面环境
+    apt-get install -y htop openssh-server lm-sensors bluez fake-hwclock mtd-utils u-boot-tools usb-modeswitch usb-modeswitch-data wireless-regdb rfkill mpv rockchip-multimedia-config linux-firmware gstreamer1.0-rockchip1 rockchip-firmware chromium-browser libv4l-rkmpp 
+
     apt-get install -y gnome-core gdm3 xwayland gnome-terminal nautilus gnome-system-monitor
 
     # 安装 Firefox ESR
