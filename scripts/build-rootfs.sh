@@ -149,13 +149,8 @@ EOF
     # 再次更新包列表以包含新的PPA
     apt-get update
 
-    # 安装基本的包
-    apt-get install -y sudo ubuntu-rockchip-settings ubuntu-rockchip-settings-desktop wget net-tools curl u-boot-menu cloud-initramfs-growroot
-
     # 安装最小的GNOME桌面环境
-    apt-get install -y htop openssh-server lm-sensors bluez fake-hwclock mtd-utils u-boot-tools usb-modeswitch usb-modeswitch-data wireless-regdb rfkill mpv rockchip-multimedia-config linux-firmware gstreamer1.0-rockchip1 rockchip-firmware chromium-browser libv4l-rkmpp 
-
-    apt-get install -y gnome-core gdm3 xwayland gnome-terminal nautilus gnome-system-monitor
+    apt-get install -y ubuntu-desktop-rockchip 
 
     # 安装 Firefox ESR
     apt-get install -y firefox-esr
