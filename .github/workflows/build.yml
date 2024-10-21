@@ -62,7 +62,6 @@ jobs:
         matrix:
           suite:
             - jammy
-            - noble
     steps:
       - name: Get more disk space
         uses: jlumbroso/free-disk-space@main
@@ -112,7 +111,6 @@ jobs:
       matrix:
         board:
           - rock-5c
-          - rock-5c-lite
         flavor:
           - desktop
         suite:
