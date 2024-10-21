@@ -150,7 +150,7 @@ EOF
     apt-get update
 
     # 安装最小的GNOME桌面环境
-    apt-get install -y ubuntu-desktop-rockchip 
+    apt-get install -y ubuntu-desktop-rockchip
 
     # 安装 Firefox ESR
     apt-get install -y firefox-esr

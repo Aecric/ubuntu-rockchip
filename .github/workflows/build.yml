@@ -57,7 +57,7 @@ jobs:
 
   kernel:
     runs-on: ubuntu-latest
-    name: Build kernel 
+    name: Build kernel
     strategy:
         matrix:
           suite:
@@ -106,14 +106,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: [rootfs, kernel]
-    name: Build image 
+    name: Build image
 
     strategy:
       matrix:
         board:
-          - rock-5a
-          - rock-5b
           - rock-5c
+          - rock-5c-lite
         flavor:
           - desktop
         suite:
