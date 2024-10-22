@@ -126,19 +126,24 @@ overlay_dir=../overlay
 # Extract the compressed root filesystem
 rm -rf ${chroot_dir_fs} && mkdir -p ${chroot_dir_fs}
 tar -xpJf "ubuntu-${RELASE_VERSION}-preinstalled-${FLAVOR}-arm64.rootfs.tar.xz" -C ${chroot_dir_fs}
+
+
 RELEASE=${SUITE}
 ARCH="arm64"
 TARGET_DIR="/ubuntu-$RELEASE-$ARCH"
 mv ${chroot_dir_fs}$TARGET_DIR/* ${chroot_dir_fs}
 rm -rf ${chroot_dir_fs}$TARGET_DIR/
 chroot_dir="$chroot_dir_fs"
+
+
 # Mount the root filesystem
 setup_mountpoint $chroot_dir
 
 # Update packages
-# chroot $chroot_dir apt-get update
-# chroot $chroot_dir apt-get -y upgrade
-    
+chroot $chroot_dir apt-get update
+chroot $chroot_dir apt-get -y upgrade
+
+
 # Run config hook to handle board specific changes
 if [[ $(type -t config_image_hook__"${BOARD}") == function ]]; then
     config_image_hook__"${BOARD}" "${chroot_dir}" "${overlay_dir}" "${SUITE}"
