@@ -35,7 +35,12 @@ fi
 source "../config/flavors/${FLAVOR}.sh"
 
 if [[ ${LAUNCHPAD} != "Y" ]]; then
-    uboot_package="$(basename "$(find u-boot-"${BOARD}"_*.deb | sort | tail -n1)")"
+    if [[${BOARD} == "rock-5c-lite"]]; then
+        uboot_package="$(basename "$(find u-boot-rock-5c_*.deb | sort | tail -n1)")"
+    else
+        uboot_package="$(basename "$(find u-boot-"${BOARD}"_*.deb | sort | tail -n1)")"
+    fi
+    
     if [ ! -e "$uboot_package" ]; then
         echo 'Error: could not find the u-boot package'
         exit 1
@@ -151,7 +156,12 @@ fi
 
 # Download and install U-Boot
 if [[ ${LAUNCHPAD} == "Y" ]]; then
-    chroot ${chroot_dir} apt-get -y install "u-boot-${BOARD}"
+    if [[${BOARD} == "rock-5c-lite"]]; then
+        chroot ${chroot_dir} apt-get -y install "u-boot-rock-5c"
+    else
+        chroot ${chroot_dir} apt-get -y install "u-boot-${BOARD}"
+    fi
+
 else
     cp "${uboot_package}" ${chroot_dir}/tmp/
     chroot ${chroot_dir} dpkg -i "/tmp/${uboot_package}"
@@ -188,7 +198,7 @@ chroot ${chroot_dir} bash -c "echo '127.0.1.1 ums' >> /etc/hosts"
 
 chroot ${chroot_dir} su - radxa -c 'sed -i "/live/d" ~/.bashrc'
 chroot ${chroot_dir} su - radxa -c 'sed -i "/live/d" ~/.profile'
-chroot ${chroot_dir} rm -f /etc/live*
+chroot ${chroot_dir} rm -f /etc/live* 
 chroot ${chroot_dir} systemctl restart systemd-hostnamed
 
 # 以 radxa 用户运行一次 code-server 并在 5 秒后结束
@@ -203,19 +213,20 @@ chroot ${chroot_dir} su - radxa -c 'echo "source /opt/ros/\$(ls /opt/ros)*/setup
 
 # 确保 bashrc 的更改立即生效（可选）
 chroot ${chroot_dir} su - radxa -c 'source ~/.bashrc'
+chroot ${chroot_dir} ln -s /lib/systemd/system/code-server@.service /etc/systemd/system/default.target.wants/code-server@radxa.service
 
 # 安装常用的 ROS 工具（例如 rosdep、colcon）
 chroot ${chroot_dir} bash -c "sudo apt-get install -y python3-rosdep python3-colcon-common-extensions"
 # chroot ${chroot_dir} bash -c "sudo rosdep init"
 # chroot ${chroot_dir} su - radxa -c 'rosdep update'
 
-#Tuna mirrors
-cat << EOF | chroot ${chroot_dir} tee /etc/apt/sources.list > /dev/null
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE} main restricted universe multiverse
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE}-updates main restricted universe multiverse
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE}-backports main restricted universe multiverse
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE}-security main restricted universe multiverse
-EOF
+# #Tuna mirrors
+# cat << EOF | chroot ${chroot_dir} tee /etc/apt/sources.list > /dev/null
+# deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE} main restricted universe multiverse
+# deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE}-updates main restricted universe multiverse
+# deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE}-backports main restricted universe multiverse
+# deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SUITE}-security main restricted universe multiverse
+# EOF
 
 # Remove packages
 chroot ${chroot_dir} apt-get -y clean

@@ -118,7 +118,7 @@ EOF
     apt-get update
 
     # 安装 dpkg 和相关的基础包
-    apt-get install -y dpkg apt libapt-pkg6.0 gpgv apt-utils debian-archive-keyring libc6 software-properties-common locales gnupg lsb-release  mtd-utils
+    apt-get install -y dpkg apt libapt-pkg6.0 gpgv apt-utils debian-archive-keyring libc6 software-properties-common locales gnupg lsb-release  mtd-utils net-tools
 
     # 添加 Rockchip 的 PPA 源
     add-apt-repository -y ppa:jjriek/rockchip
@@ -136,25 +136,16 @@ EOF
 EOF
 
 
-    # 添加 Firefox ESR 的 PPA 源
-    add-apt-repository -y ppa:mozillateam/ppa
-
-    # 优先安装来自 PPA 的 Firefox ESR 版本
-    echo '
-    Package: *
-    Pin: release o=LP-PPA-mozillateam
-    Pin-Priority: 1001
-    ' > /etc/apt/preferences.d/mozilla-firefox
-
     # 再次更新包列表以包含新的PPA
     apt-get update
 
     # 安装最小的GNOME桌面环境
     apt-get install -y ubuntu-desktop-rockchip
-
-    # 安装 Firefox ESR
-    apt-get install -y firefox-esr
-
+    apt remove --purge -y libreoffice* 
+    apt remove --purge -y thunderbird
+    apt remove --purge -y gnome-calendar gnome-contacts gnome-maps gnome-music gnome-photos gnome-weather rhythmbox gnome-mines gnome-sudoku aisleriot gnome-todo gnome-calculator remmina simple-scan deja-dup baobab gnome-disk-utility file-roller evince transmission gnome-mahjongg shotwell yelp
+    apt autoremove -y
+    echo "LibreOffice、邮件程序和其他不必要的应用程序已成功卸载。"
     # 清理不必要的包和缓存
     apt-get clean
     rm -rf /var/lib/apt/lists/*

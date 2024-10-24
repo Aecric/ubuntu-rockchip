@@ -111,6 +111,7 @@ jobs:
       matrix:
         board:
           - rock-5c
+          - rock-5c-lite
         flavor:
           - desktop
         suite:

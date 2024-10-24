@@ -28,7 +28,7 @@ function config_image_hook__rock-5c() {
         chroot "${rootfs}" apt-get -y install camera-engine-rkaiq-rk3588
 
         # Install AIC8800 WiFi and Bluetooth DKMS
-        chroot "${rootfs}" apt-get -y install dkms aic8800-firmware aic8800-usb-dkms
+        chroot "${rootfs}" apt-get -y install dkms aic8800-firmware
 
         # shellcheck disable=SC2016
         echo 'SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="88:00:*", NAME="$ENV{ID_NET_SLOT}"' > "${rootfs}/etc/udev/rules.d/99-radxa-aic8800.rules"
