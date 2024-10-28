@@ -141,12 +141,12 @@ EOF
 
     # 安装最小的GNOME桌面环境
     apt-get install -y ubuntu-desktop-rockchip
-    apt remove --purge -y libreoffice* 
+    apt remove --purge -y libreoffice*
     apt remove --purge -y thunderbird
-    apt remove --purge -y gnome-calendar gnome-contacts gnome-maps gnome-music gnome-photos gnome-weather rhythmbox gnome-mines gnome-sudoku aisleriot gnome-todo gnome-calculator remmina simple-scan deja-dup baobab gnome-disk-utility file-roller evince transmission gnome-mahjongg shotwell yelp
-    apt autoremove -y
+    apt remove --purge -y gnome-calendar gnome-contacts gnome-maps gnome-music gnome-photos gnome-weather rhythmbox gnome-mines gnome-sudoku aisleriot gnome-todo gnome-calculator remmina simple-scan evince transmission gnome-mahjongg shotwell yelp
     echo "LibreOffice、邮件程序和其他不必要的应用程序已成功卸载。"
     # 清理不必要的包和缓存
+
     apt-get clean
     rm -rf /var/lib/apt/lists/*
 
