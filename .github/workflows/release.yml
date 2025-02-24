@@ -10,7 +10,7 @@ permissions:
 jobs:
   prepare_release:
     name: Create release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,7 +26,7 @@ jobs:
       release_id: ${{ steps.release.outputs.id }}
 
   rootfs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [prepare_release]
     name: Build rootfs 
     strategy:
@@ -76,7 +76,7 @@ jobs:
             path: ./build/ubuntu-${{ matrix.suite == 'jammy' && '22.04' || matrix.suite == 'noble' && '24.04' }}-preinstalled-${{ matrix.flavor }}-arm64.rootfs.tar.xz
             if-no-files-found: error
   kernel:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     name: Build kernel 
     strategy:
         matrix:
@@ -124,7 +124,7 @@ jobs:
             if-no-files-found: error
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [rootfs, prepare_release,kernel]
     name: Build image 
 

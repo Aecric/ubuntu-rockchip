@@ -7,7 +7,7 @@ run-name: Next
 
 jobs:
   rootfs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     name: Build rootfs 
     strategy:
         matrix:
@@ -57,7 +57,7 @@ jobs:
             if-no-files-found: error
 
   kernel:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     name: Build kernel 
     strategy:
         matrix:
@@ -103,7 +103,7 @@ jobs:
             path: ./build/linux-*.deb
             if-no-files-found: error
   prep:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [rootfs, kernel]
     name: Set matrix
     outputs:
@@ -132,7 +132,7 @@ jobs:
             echo "matrix={\"include\":[${matrix::-1}]}" >> $GITHUB_OUTPUT
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [prep]
     name: Build image 
 
