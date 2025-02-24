@@ -8,7 +8,7 @@ run-name: Build
 jobs:
   rootfs:
     runs-on: ubuntu-latest
-    name: Build rootfs 
+    name: Build rootfs
     strategy:
         matrix:
           flavor:
@@ -110,7 +110,7 @@ jobs:
     strategy:
       matrix:
         board:
-          - rock-5c
+          - radxa-cm5-io
         flavor:
           - desktop
         suite:
