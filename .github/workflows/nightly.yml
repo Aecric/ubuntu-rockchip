@@ -1,32 +1,13 @@
-name: Release
-run-name: Release
-
+name: Nightly Build
+run-name: Nightly build
 on:
-  workflow_dispatch:
-
-permissions:
-    contents: write
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
-  prepare_release:
-    name: Create release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Create empty release
-        id: release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v2.4.2
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target_commitish: main
-          draft: true
-    outputs:
-      release_id: ${{ steps.release.outputs.id }}
 
   config:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     name: Create martrix
     outputs:
       build_matrix: ${{ steps.build.outputs.build_matrix }}
@@ -64,9 +45,9 @@ jobs:
             echo "rootfs_matrix={\"include\":[${rootfs_matrix::-1}]}" >> $GITHUB_OUTPUT
 
   rootfs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     name: Build rootfs 
-    needs: [prepare_release, config]
+    needs: [config]
     strategy:
         matrix: ${{ fromJson(needs.config.outputs.rootfs_matrix) }}
     steps:
@@ -112,8 +93,8 @@ jobs:
             if-no-files-found: error
 
   build:
-    runs-on: ubuntu-latest
-    needs: [rootfs, prepare_release, config]
+    runs-on: ubuntu-22.04
+    needs: [rootfs, config]
     name: Build image 
     strategy:
         matrix: ${{ fromJson(needs.config.outputs.build_matrix) }}
@@ -159,15 +140,11 @@ jobs:
         run: sudo ./build.sh --board=${{ matrix.board }} --suite=${{ matrix.suite }} --flavor=${{ matrix.flavor }} --launchpad
 
       - name: Upload
-        if: needs.prepare_release.outputs.release_id != '' 
-        uses: xresloader/upload-to-github-release@v1
-        env:
-            GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/upload-artifact@v4.3.3
         with:
-          release_id: ${{ needs.prepare_release.outputs.release_id }}
-          file: images/ubuntu-*-preinstalled-*-arm64-${{ matrix.board }}.*
-          draft: true
-          overwrite: true
+          name: ubuntu-${{ steps.vars.outputs.suite_version }}-preinstalled-${{ matrix.flavor }}-arm64-${{ matrix.board }}
+          path: ./images/ubuntu-*-preinstalled-${{ matrix.flavor }}-arm64-${{ matrix.board }}.*
+          if-no-files-found: error
 
       - name: Clean cache
         shell: bash

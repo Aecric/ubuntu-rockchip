@@ -35,12 +35,7 @@ fi
 source "../config/flavors/${FLAVOR}.sh"
 
 if [[ ${LAUNCHPAD} != "Y" ]]; then
-    if [[${BOARD} == "rock-5c-lite"]]; then
-        uboot_package="$(basename "$(find u-boot-rock-5c_*.deb | sort | tail -n1)")"
-    else
-        uboot_package="$(basename "$(find u-boot-"${BOARD}"_*.deb | sort | tail -n1)")"
-    fi
-    
+    uboot_package="$(basename "$(find u-boot-"${BOARD}"_*.deb | sort | tail -n1)")"
     if [ ! -e "$uboot_package" ]; then
         echo 'Error: could not find the u-boot package'
         exit 1
@@ -125,21 +120,12 @@ export DEBIAN_FRONTEND=noninteractive
 export LC_ALL=C
 
 # Debootstrap options
-chroot_dir_fs=rootfs
+chroot_dir=rootfs
 overlay_dir=../overlay
 
 # Extract the compressed root filesystem
-rm -rf ${chroot_dir_fs} && mkdir -p ${chroot_dir_fs}
-tar -xpJf "ubuntu-${RELASE_VERSION}-preinstalled-${FLAVOR}-arm64.rootfs.tar.xz" -C ${chroot_dir_fs}
-
-
-RELEASE=${SUITE}
-ARCH="arm64"
-TARGET_DIR="/ubuntu-$RELEASE-$ARCH"
-mv ${chroot_dir_fs}$TARGET_DIR/* ${chroot_dir_fs}
-rm -rf ${chroot_dir_fs}$TARGET_DIR/
-chroot_dir="$chroot_dir_fs"
-
+rm -rf ${chroot_dir} && mkdir -p ${chroot_dir}
+tar -xpJf "ubuntu-${RELASE_VERSION}-preinstalled-${FLAVOR}-arm64.rootfs.tar.xz" -C ${chroot_dir}
 
 # Mount the root filesystem
 setup_mountpoint $chroot_dir
@@ -147,8 +133,7 @@ setup_mountpoint $chroot_dir
 # Update packages
 chroot $chroot_dir apt-get update
 chroot $chroot_dir apt-get -y upgrade
-
-
+    
 # Run config hook to handle board specific changes
 if [[ $(type -t config_image_hook__"${BOARD}") == function ]]; then
     config_image_hook__"${BOARD}" "${chroot_dir}" "${overlay_dir}" "${SUITE}"
@@ -156,12 +141,7 @@ fi
 
 # Download and install U-Boot
 if [[ ${LAUNCHPAD} == "Y" ]]; then
-    if [[${BOARD} == "rock-5c-lite"]]; then
-        chroot ${chroot_dir} apt-get -y install "u-boot-rock-5c"
-    else
-        chroot ${chroot_dir} apt-get -y install "u-boot-${BOARD}"
-    fi
-
+    chroot ${chroot_dir} apt-get -y install "u-boot-${BOARD}"
 else
     cp "${uboot_package}" ${chroot_dir}/tmp/
     chroot ${chroot_dir} dpkg -i "/tmp/${uboot_package}"
@@ -232,6 +212,7 @@ chroot ${chroot_dir} bash -c "apt-get install -y python3-rosdep python3-colcon-c
 chroot ${chroot_dir} apt-get -y clean
 chroot ${chroot_dir} apt-get -y autoclean
 chroot ${chroot_dir} apt-get -y autoremove
+
 # Umount the root filesystem
 teardown_mountpoint $chroot_dir
 
