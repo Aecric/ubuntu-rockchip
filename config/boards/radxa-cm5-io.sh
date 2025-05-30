@@ -27,6 +27,12 @@ function config_image_hook__radxa-cm5-io() {
         # Install the rockchip camera engine
         chroot "${rootfs}" apt-get -y install camera-engine-rkaiq-rk3588
 
+        # Install AIC8800 WiFi and Bluetooth DKMS
+        chroot "${rootfs}" apt-get -y install dkms aic8800-firmware
+
+        # shellcheck disable=SC2016
+        echo 'SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="88:00:*", NAME="$ENV{ID_NET_SLOT}"' > "${rootfs}/etc/udev/rules.d/99-radxa-aic8800.rules"
+
         # Fix and configure audio device
         mkdir -p "${rootfs}/usr/lib/scripts"
         cp "${overlay}/usr/lib/scripts/alsa-audio-config" "${rootfs}/usr/lib/scripts/alsa-audio-config"
