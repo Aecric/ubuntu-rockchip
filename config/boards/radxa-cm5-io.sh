@@ -18,14 +18,20 @@ function config_image_hook__radxa-cm5-io() {
         # Install panfork
         chroot "${rootfs}" add-apt-repository -y ppa:jjriek/panfork-mesa
         chroot "${rootfs}" apt-get update
-        chroot "${rootfs}" apt-get -y install mali-g610-firmware
+        # chroot "${rootfs}" apt-get -y install mali-g610-firmware
         chroot "${rootfs}" apt-get -y dist-upgrade
 
         # Install libmali blobs alongside panfork
-        chroot "${rootfs}" apt-get -y install libmali-g610-x11
+        # chroot "${rootfs}" apt-get -y install libmali-g610-x11
 
         # Install the rockchip camera engine
         chroot "${rootfs}" apt-get -y install camera-engine-rkaiq-rk3588
+
+        # Install AIC8800 WiFi and Bluetooth DKMS
+        chroot "${rootfs}" apt-get -y install dkms aic8800-firmware aic8800-usb-dkms
+
+        # shellcheck disable=SC2016
+        echo 'SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="88:00:*", NAME="$ENV{ID_NET_SLOT}"' > "${rootfs}/etc/udev/rules.d/99-radxa-aic8800.rules"
 
         # Fix and configure audio device
         mkdir -p "${rootfs}/usr/lib/scripts"
