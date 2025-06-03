@@ -35,11 +35,15 @@ fi
 source "../config/flavors/${FLAVOR}.sh"
 
 if [[ ${LAUNCHPAD} != "Y" ]]; then
-    if [[${BOARD} == "rock-5c-lite"]]; then
-        uboot_package="$(basename "$(find u-boot-rock-5c_*.deb | sort | tail -n1)")"
+    # 检查 BOARD 是否以 -lite 结尾
+    if [[ "${BOARD}" == *-lite ]]; then
+        # 如果是，则去掉 -lite 后缀
+        board_to_find="${BOARD%-lite}"
     else
-        uboot_package="$(basename "$(find u-boot-"${BOARD}"_*.deb | sort | tail -n1)")"
+        # 否则，直接使用 BOARD
+        board_to_find="${BOARD}"
     fi
+    uboot_package="$(basename "$(find u-boot-"${board_to_find}"_*.deb | sort | tail -n1)")"
     
     if [ ! -e "$uboot_package" ]; then
         echo 'Error: could not find the u-boot package'

@@ -18,9 +18,9 @@ jobs:
         id: release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v2.3.0
+          tag_name: v202506
           token: ${{ secrets.GITHUB_TOKEN }}
-          target_commitish: main
+          target_commitish: custom
           draft: true
     outputs:
       release_id: ${{ steps.release.outputs.id }}
@@ -126,17 +126,22 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     needs: [rootfs, prepare_release,kernel]
-    name: Build image 
+    name: Build image
 
     strategy:
       matrix:
         board:
+          - radxa-cm5-io
+          - radxa-cm5-io-lite
+          - rock-5c
+          - rock-5c-lite
+          - rock-5b-plus
+          - roc-rk3588s-pc
           - rock-5a
         flavor:
           - desktop
         suite:
           - jammy
-          - noble
         exclude:
           - board: armsom-sige5
             suite: jammy
@@ -183,7 +188,7 @@ jobs:
 
       - name: Build
         shell: bash
-        run: sudo ./build.sh --board=${{ matrix.board }} --suite=${{ matrix.suite }} --flavor=${{ matrix.flavor }} --launchpad
+        run: sudo ./build.sh --board=${{ matrix.board }} --suite=${{ matrix.suite }} --flavor=${{ matrix.flavor }}
 
       - name: Upload
         if: needs.prepare_release.outputs.release_id != '' 
