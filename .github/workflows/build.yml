@@ -63,7 +63,6 @@ jobs:
         matrix:
           suite:
             - jammy
-            - noble
     steps:
       - name: Get more disk space
         uses: jlumbroso/free-disk-space@main
