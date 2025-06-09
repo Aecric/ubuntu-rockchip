@@ -177,9 +177,9 @@ elif [ "${SUITE}" = "noble" ]; then
 
     # 添加基本的Ubuntu软件源
     cat <<EOF > /etc/apt/sources.list
-    deb http://ports.ubuntu.com/ubuntu-ports jammy main restricted universe multiverse
-    deb http://ports.ubuntu.com/ubuntu-ports jammy-updates main restricted universe multiverse
-    deb http://ports.ubuntu.com/ubuntu-ports jammy-security main restricted universe multiverse
+    deb http://ports.ubuntu.com/ubuntu-ports noble main restricted universe multiverse
+    deb http://ports.ubuntu.com/ubuntu-ports noble-updates main restricted universe multiverse
+    deb http://ports.ubuntu.com/ubuntu-ports noble-security main restricted universe multiverse
 EOF
 
     # 更新包列表
