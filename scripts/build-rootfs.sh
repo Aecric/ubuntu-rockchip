@@ -118,7 +118,7 @@ EOF
     apt-get update
 
     # 安装 dpkg 和相关的基础包
-    apt-get install -y dpkg apt libapt-pkg6.0 gpgv apt-utils debian-archive-keyring libc6 software-properties-common locales gnupg lsb-release  mtd-utils net-tools
+    apt-get install -y dpkg apt libapt-pkg6.0 gpgv apt-utils debian-archive-keyring libc6 software-properties-common locales gnupg lsb-release  mtd-utils net-tools bash-completion openjdk-21-jdk
 
     # 添加 Rockchip 的 PPA 源
     add-apt-repository -y ppa:jjriek/rockchip
@@ -163,7 +163,7 @@ EOL
     echo "ROS 安装完成。"
 
 elif [ "${SUITE}" = "noble" ]; then
-    # 进入目标系统
+   # 进入目标系统
     chroot $TARGET_DIR /bin/bash << 'EOL'
     # 设置基本的网络配置
     echo "nameserver 8.8.8.8" > /etc/resolv.conf
@@ -177,18 +177,18 @@ elif [ "${SUITE}" = "noble" ]; then
 
     # 添加基本的Ubuntu软件源
     cat <<EOF > /etc/apt/sources.list
-    deb http://ports.ubuntu.com/ubuntu-ports noble main restricted universe multiverse
-    deb http://ports.ubuntu.com/ubuntu-ports noble-updates main restricted universe multiverse
-    deb http://ports.ubuntu.com/ubuntu-ports noble-security main restricted universe multiverse
+    deb http://ports.ubuntu.com/ubuntu-ports jammy main restricted universe multiverse
+    deb http://ports.ubuntu.com/ubuntu-ports jammy-updates main restricted universe multiverse
+    deb http://ports.ubuntu.com/ubuntu-ports jammy-security main restricted universe multiverse
 EOF
 
     # 更新包列表
     apt-get update
 
     # 安装 dpkg 和相关的基础包
-    apt-get install -y dpkg apt libapt-pkg6.0 gpgv apt-utils debian-archive-keyring libc6 software-properties-common locales  gnupg lsb-release
+    apt-get install -y dpkg apt libapt-pkg6.0 gpgv apt-utils debian-archive-keyring libc6 software-properties-common locales gnupg lsb-release  mtd-utils net-tools bash-completion openjdk-21-jdk
 
-    # 添加 Rockchip 的 PPA 源（假设这些 PPA 仍然适用于 Ubuntu 24.04）
+    # 添加 Rockchip 的 PPA 源
     add-apt-repository -y ppa:jjriek/rockchip
     add-apt-repository -y ppa:jjriek/rockchip-multimedia
 
@@ -203,38 +203,18 @@ EOF
     Pin-Priority: 1001
 EOF
 
-    cat <<EOF > /etc/apt/preferences.d/extra-ppas-ignore.pref
-    Package: oem-*
-    Pin: release o=LP-PPA-jjriek-rockchip-multimedia
-    Pin-Priority: -1
-
-    Package: ubiquity*
-    Pin: release o=LP-PPA-jjriek-rockchip-multimedia
-    Pin-Priority: -1
-EOF
-    # 添加 Firefox ESR 的 PPA 源（假设 PPA 支持 Ubuntu 24.04）
-    add-apt-repository -y ppa:mozillateam/ppa
-
-    # 优先安装来自 PPA 的 Firefox ESR 版本
-    echo '
-    Package: *
-    Pin: release o=LP-PPA-mozillateam
-    Pin-Priority: 1001
-    ' > /etc/apt/preferences.d/mozilla-firefox
 
     # 再次更新包列表以包含新的PPA
     apt-get update
 
-    # 安装基本的包
-    apt-get install -y sudo wget net-tools curl
-
     # 安装最小的GNOME桌面环境
-    apt-get install -y gnome-core gdm3 xwayland gnome-terminal nautilus gnome-system-monitor
-
-    # 安装 Firefox ESR
-    apt-get install -y firefox-esr
-
+    apt-get install -y ubuntu-desktop-rockchip
+    apt remove --purge -y libreoffice*
+    apt remove --purge -y thunderbird
+    apt remove --purge -y gnome-calendar gnome-contacts gnome-maps gnome-music gnome-photos gnome-weather rhythmbox gnome-mines gnome-sudoku aisleriot gnome-todo gnome-calculator remmina simple-scan evince transmission gnome-mahjongg shotwell yelp
+    echo "LibreOffice、邮件程序和其他不必要的应用程序已成功卸载。"
     # 清理不必要的包和缓存
+
     apt-get clean
     rm -rf /var/lib/apt/lists/*
 

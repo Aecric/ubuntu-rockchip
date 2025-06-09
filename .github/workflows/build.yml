@@ -15,6 +15,7 @@ jobs:
             - desktop
           suite:
             - jammy
+            - noble
     steps:
       - name: Get more disk space
         uses: jlumbroso/free-disk-space@main
@@ -62,6 +63,7 @@ jobs:
         matrix:
           suite:
             - jammy
+            - noble
     steps:
       - name: Get more disk space
         uses: jlumbroso/free-disk-space@main
@@ -98,7 +100,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4.3.3
         with:
-            name: linux-rockchip-${{ matrix.suite == 'jammy' && '5.10' || matrix.suite == 'noble' && '6.1' }}
+            name: linux-rockchip-6.1
             path: ./build/linux-*.deb
             if-no-files-found: error
 
@@ -121,9 +123,10 @@ jobs:
           - desktop
         suite:
           - jammy
+          - noble
         exclude:
           - board: armsom-sige5
-            suite: jammy
+            suite: jammy 
 
     steps:
       - name: Get more disk space
@@ -163,7 +166,7 @@ jobs:
       - name: Checkout kernel
         uses: actions/download-artifact@v4.1.2
         with:
-            name: linux-rockchip-${{ matrix.suite == 'jammy' && '5.10' || matrix.suite == 'noble' && '6.1' }}
+            name: linux-rockchip-6.1
             path: ./build/
 
       - name: Build
