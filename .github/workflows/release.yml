@@ -130,12 +130,9 @@ jobs:
       matrix:
         board:
           - radxa-cm5-io
-          - radxa-cm5-io-lite
+          - radxa-zero3
           - rock-5c
           - rock-5c-lite
-          - rock-5b-plus
-          - roc-rk3588s-pc
-          - rock-5a
         flavor:
           - desktop
         suite:
