@@ -76,7 +76,7 @@ jobs:
             if-no-files-found: error
   kernel:
     runs-on: ubuntu-22.04
-    name: Build kernel 
+    name: Build kernel
     strategy:
         matrix:
           suite:
@@ -133,6 +133,7 @@ jobs:
           - radxa-zero3
           - rock-5c
           - rock-5c-lite
+          - rock-5b-plus
         flavor:
           - desktop
         suite:
