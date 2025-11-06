@@ -18,9 +18,9 @@ jobs:
         id: release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v202506
+          tag_name: v202511
           token: ${{ secrets.GITHUB_TOKEN }}
-          target_commitish: custom
+          target_commitish: preinstall_ros2
           draft: true
     outputs:
       release_id: ${{ steps.release.outputs.id }}
