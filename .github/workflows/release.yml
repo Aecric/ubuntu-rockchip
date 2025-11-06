@@ -130,7 +130,6 @@ jobs:
       matrix:
         board:
           - radxa-cm5-io
-          - radxa-zero3
           - rock-5c
           - rock-5c-lite
           - rock-5b-plus
