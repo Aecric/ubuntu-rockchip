@@ -115,17 +115,13 @@ jobs:
           - radxa-cm5-io-lite
           - rock-5c
           - rock-5c-lite
-          - rock-5b-plus
-          - roc-rk3588s-pc
-          - rock-5a
         flavor:
           - desktop
         suite:
           - jammy
-          - noble
         exclude:
           - board: armsom-sige5
-            suite: jammy 
+            suite: jammy
 
     steps:
       - name: Get more disk space

@@ -143,10 +143,12 @@ EOF
     apt-get install -y ubuntu-desktop-rockchip
     apt remove --purge -y libreoffice*
     apt remove --purge -y thunderbird
-    apt remove --purge -y gnome-calendar gnome-contacts gnome-maps gnome-music gnome-photos gnome-weather rhythmbox gnome-mines gnome-sudoku aisleriot gnome-todo gnome-calculator remmina simple-scan evince transmission gnome-mahjongg shotwell yelp
+    apt remove --purge -y gnome-calendar gnome-contacts gnome-maps gnome-music gnome-photos gnome-weather rhythmbox gnome-mines gnome-sudoku aisleriot gnome-todo gnome-calculator remmina simple-scan evince transmission gnome-mahjongg shotwell yelp brltty 
     echo "LibreOffice、邮件程序和其他不必要的应用程序已成功卸载。"
     # 清理不必要的包和缓存
+    # 重新安装环境变量所需的软件包
 
+    apt-get install -y dpkg apt libapt-pkg6.0 gpgv apt-utils debian-archive-keyring libc6 software-properties-common locales gnupg lsb-release  mtd-utils net-tools bash-completion openjdk-21-jdk
     apt-get clean
     rm -rf /var/lib/apt/lists/*
 
@@ -217,6 +219,8 @@ EOF
 
     apt-get clean
     rm -rf /var/lib/apt/lists/*
+
+    apt-get install -y dpkg apt libapt-pkg6.0 gpgv apt-utils debian-archive-keyring libc6 software-properties-common locales gnupg lsb-release  mtd-utils net-tools bash-completion openjdk-21-jdk
 
     # 退出chroot环境
     exit
